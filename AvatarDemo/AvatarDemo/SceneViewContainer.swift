@@ -22,14 +22,14 @@ struct SceneViewContainer: UIViewRepresentable {
         var sceneView: SCNView?
         var shapeKeyAnimator: ShapeKeyAnimator?
         var textToSpeechProcessor: TextToSpeechProcessor
-        
+
         // Animations
         private var currentHeadAngle: Float = 0
 
         init(parent: SceneViewContainer) {
             self.parent = parent
             self.textToSpeechProcessor = TextToSpeechProcessor(configuration: parent.avatarConfiguration)
-            
+
             super.init()
             NotificationCenter.default.addObserver(self, selector: #selector(changeShapeKey(notification:)), name: .avatarChangeShapeKey, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(readText(notification:)), name: .avatarReadText, object: nil)
@@ -109,10 +109,13 @@ struct SceneViewContainer: UIViewRepresentable {
         func printNodeNamesAndMorphers(_ node: SCNNode) {
             print("Node name: \(node.name ?? "Unnamed")")
             if let morpher = node.morpher {
-                print("  Morpher found with targets: \(morpher.targets)")
+                print("🎭 MORPHER FOUND on node: \(node.name ?? "Unnamed")")
+                print("  Total morph targets: \(morpher.targets.count)")
                 for (index, target) in morpher.targets.enumerated() {
-                    print("    Target \(index): \(target.name ?? "Unnamed")")
+                    let targetName = target.name ?? "Unnamed_\(index)"
+                    print("    [\(index)] \(targetName)")
                 }
+                print("  ---")
             }
             for child in node.childNodes {
                 printNodeNamesAndMorphers(child)
@@ -121,19 +124,42 @@ struct SceneViewContainer: UIViewRepresentable {
 
         func focusCameraOnHead() {
             guard let sceneView = sceneView else { return }
-            guard let cameraNode = sceneView.scene?.rootNode.childNode(withName: parent.avatarConfiguration.nodeNameCamera, recursively: true),
-                  let headNode = sceneView.scene?.rootNode.childNode(withName: parent.avatarConfiguration.nodeNameHead, recursively: true) else {
+            guard let headNode = sceneView.scene?.rootNode.childNode(withName: parent.avatarConfiguration.nodeNameHead, recursively: true) else {
+                print("❌ Head node '\(parent.avatarConfiguration.nodeNameHead)' not found!")
                 return
             }
 
-            // Position the camera relative to the head node
+            // Get or create camera node
+            var cameraNode: SCNNode
+            if let existingCamera = sceneView.scene?.rootNode.childNode(withName: parent.avatarConfiguration.nodeNameCamera, recursively: true) {
+                cameraNode = existingCamera
+                print("✅ Using existing camera: \(parent.avatarConfiguration.nodeNameCamera)")
+            } else {
+                // Create a new camera if none exists
+                cameraNode = SCNNode()
+                cameraNode.camera = SCNCamera()
+                cameraNode.name = "CustomCamera"
+                sceneView.scene?.rootNode.addChildNode(cameraNode)
+                print("✅ Created new camera")
+            }
+
+            // Position the camera in front of the head, looking at it
             let headPosition = headNode.worldPosition
-            cameraNode.position = SCNVector3(headPosition.x, headPosition.y, headPosition.z + 0.5)
+            // Character Creator 3 models use Z-up axis, head is around Z=173cm
+            // Place camera in front (positive Y in SceneKit, since DAE is Z-up converted)
+            // Adjust based on model's actual scale and orientation
+            cameraNode.position = SCNVector3(headPosition.x, headPosition.y + 80, headPosition.z + 20)
 
             // Make the camera look at the head node
             let lookAtConstraint = SCNLookAtConstraint(target: headNode)
             lookAtConstraint.isGimbalLockEnabled = true
             cameraNode.constraints = [lookAtConstraint]
+
+            // Set as the active camera
+            sceneView.pointOfView = cameraNode
+
+            print("✅ Camera positioned at: \(cameraNode.position)")
+            print("✅ Head position: \(headPosition)")
         }
 
         func setupNodeTransformations(node: SCNNode) {
@@ -215,31 +241,31 @@ struct SceneViewContainer: UIViewRepresentable {
     func makeUIView(context: Context) -> SCNView {
         let sceneView = SCNView()
         context.coordinator.setup(sceneView: sceneView)
-        
+
         // Load the robot.scn file
         guard let scene = SCNScene(named: "robot.scn") else {
             fatalError("Unable to find robot.scn")
         }
-        
+
         sceneView.scene = scene
         sceneView.allowsCameraControl = true
         sceneView.autoenablesDefaultLighting = true
-        
+
         // Center the mesh in the scene, scale it appropriately, and rotate it to face the back
         if let node = scene.rootNode.childNode(withName: avatarConfiguration.nodeNameRoot, recursively: true) {
             context.coordinator.setupNodeTransformations(node: node)
             context.coordinator.applyMaterial(to: node, textureName: avatarConfiguration.textureName)
         }
-        
+
         // Print the node names and check for morphers
         context.coordinator.printNodeNamesAndMorphers(scene.rootNode)
-        
+
         // Initialize shape key animator
         context.coordinator.initializeShapeKeyAnimatorIfNeeded()
 
         // Focus the camera on the head
         //context.coordinator.focusCameraOnHead()
-        
+
         return sceneView
     }
 

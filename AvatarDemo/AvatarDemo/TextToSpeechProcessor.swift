@@ -28,14 +28,21 @@ class TextToSpeechProcessor: NSObject, AVSpeechSynthesizerDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let utterance = AVSpeechUtterance(string: text)
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+            utterance.rate = 0.3  // Slower speech rate (default is 0.5)
             self.speechSynthesizer.speak(utterance)
         }
     }
 
     private func estimateSpeechDuration(for text: String) -> TimeInterval {
-        let wordsPerMinute: Double = 250.0
+        // Adjust words per minute based on speech rate (0.3 is slower than default 0.5)
+        // At rate 0.3, speech is about 60% of normal speed
+        let baseWordsPerMinute: Double = 250.0
+        let speechRate: Double = 0.3
+        let normalRate: Double = 0.5
+        let adjustedWordsPerMinute = baseWordsPerMinute * (speechRate / normalRate)
+
         let words = text.split { $0.isWhitespace || $0.isPunctuation }.count
-        let minutes = Double(words) / wordsPerMinute
+        let minutes = Double(words) / adjustedWordsPerMinute
         return minutes * 60.0
     }
 

@@ -17,6 +17,18 @@ struct ContentView: View {
     @State private var meshScale: SCNVector3 = SCNVector3(0.2, 0.2, 0.2)
     @State private var inputText: String = "Do you think this is ok?"
 
+    // Pre-defined phrases from AvatarAI
+    let phrases = [
+        "Hello! I'm your AR avatar assistant.",
+        "Welcome to the world of augmented reality!",
+        "Face tracking technology is amazing!",
+        "I can speak and animate in real-time.",
+        "Let's explore what AR can do together!",
+        "This is the future of human-computer interaction.",
+        "I'm learning to express emotions through facial animations.",
+        "Technology and creativity combined create magic!"
+    ]
+
     var body: some View {
         VStack {
             SceneViewContainer(cameraPosition: $cameraPosition, meshPosition: $meshPosition, meshRotation: $meshRotation, meshScale: $meshScale, avatarConfiguration: AvatarConfiguration.defaultConfiguration)
@@ -76,14 +88,23 @@ struct ContentView: View {
             .cornerRadius(10)
             .padding()
             HStack {
-                TextField("Enter text", text: $inputText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                Button("Read It") {
+                Button("Speak Random Phrase") {
+                    inputText = phrases.randomElement() ?? phrases[0]
                     NotificationCenter.default.post(name: .avatarReadText, object: inputText)
                 }
                 .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .padding(.horizontal)
             }
+
+            Text("Current: \(inputText)")
+                .font(.system(size: 12))
+                .foregroundColor(.gray)
+                .padding(.horizontal)
+                .multilineTextAlignment(.center)
             
         }
     }

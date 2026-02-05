@@ -18,6 +18,7 @@
 		49DF4A002C1D9EA700E07670 /* SyllableMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DF49FF2C1D9EA700E07670 /* SyllableMapper.swift */; };
 		49DF4A022C1DB30500E07670 /* TextToSpeechProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DF4A012C1DB30500E07670 /* TextToSpeechProcessor.swift */; };
 		49DF4A0B2C1DE60900E07670 /* robot.scn in Resources */ = {isa = PBXBuildFile; fileRef = 49DF4A0A2C1DE60900E07670 /* robot.scn */; };
+		CC088FFB2EA5355D0049DED4 /* alejandro.dae in Resources */ = {isa = PBXBuildFile; fileRef = CC088FFA2EA5355D0049DED4 /* alejandro.dae */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		49DF4A012C1DB30500E07670 /* TextToSpeechProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToSpeechProcessor.swift; sourceTree = "<group>"; };
 		49DF4A052C1DE04D00E07670 /* robot.usdc */ = {isa = PBXFileReference; lastKnownFileType = file; path = robot.usdc; sourceTree = "<group>"; };
 		49DF4A0A2C1DE60900E07670 /* robot.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = robot.scn; sourceTree = "<group>"; };
+		CC088FFA2EA5355D0049DED4 /* alejandro.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = alejandro.dae; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 		49DF49F42C1D94A600E07670 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				CC088FFA2EA5355D0049DED4 /* alejandro.dae */,
 				49DF4A052C1DE04D00E07670 /* robot.usdc */,
 				49DF4A0A2C1DE60900E07670 /* robot.scn */,
 			);
@@ -157,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49DF4A0B2C1DE60900E07670 /* robot.scn in Resources */,
+				CC088FFB2EA5355D0049DED4 /* alejandro.dae in Resources */,
 				49DF49EC2C1D948700E07670 /* Preview Assets.xcassets in Resources */,
 				49DF49E92C1D948700E07670 /* Assets.xcassets in Resources */,
 			);
@@ -310,7 +314,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AvatarDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = 9EDK35GEKC;
+				DEVELOPMENT_TEAM = APYL42WZVK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -339,7 +343,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AvatarDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = 9EDK35GEKC;
+				DEVELOPMENT_TEAM = APYL42WZVK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
